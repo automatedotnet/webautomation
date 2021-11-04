@@ -15,9 +15,10 @@ namespace WebAutomation.Tests
             chromeOptions.AddExcludedArgument("enable-automation");
 
             var chromeDriver = new ChromeDriver(chromeOptions);
+            IJavaScriptExecutor js = (IJavaScriptExecutor)chromeDriver;
 
             chromeDriver.Navigate().GoToUrl("http://www.google.com");
-            chromeDriver.FindElement(By.Id("L2AGLb")).Click();
+            js.ExecuteScript("document.querySelector('div[aria-modal]').remove();");
             chromeDriver.FindElement(By.Name("q")).SendKeys("alma");
             chromeDriver.Quit();
         }
