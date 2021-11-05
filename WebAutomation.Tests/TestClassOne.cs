@@ -16,7 +16,7 @@ namespace WebAutomation.Tests
 
             var chromeDriver = new ChromeDriver(chromeOptions);
             IJavaScriptExecutor js = (IJavaScriptExecutor)chromeDriver;
-
+            
             chromeDriver.Navigate().GoToUrl("http://www.google.com");
             js.ExecuteScript("document.querySelector('div[aria-modal]').remove();");
             chromeDriver.FindElement(By.Name("q")).SendKeys("alma");
