@@ -1,66 +1,58 @@
 ﻿using System;
 using System.Reflection;
 using OpenQA.Selenium;
+using WebAutomation.Core.Exceptions;
 
 namespace WebAutomation.Core
 {
     public static class WebDriverExtensions
     {
-        public static Screenshot TakeScreenShot(this IWebDriver driver)
+        public static Screenshot TakeScreenshot(this IWebDriver driver)
         {
-            switch (driver)
+            if (driver is ITakesScreenshot takesScreenShot)
+                return takesScreenShot.GetScreenshot();
+
+            if (driver is IHasCapabilities hasCapabilities)
             {
-                case ITakesScreenshot takesScreenShot:
-                    return takesScreenShot.GetScreenshot();
-                case IHasCapabilities hasCapabilities:
-                    if (!hasCapabilities.Capabilities.HasCapability(CapabilityType.TakesScreenshot) || !(bool)hasCapabilities.Capabilities.GetCapability(CapabilityType.TakesScreenshot))
-                        throw new WebDriverException("Driver capabilities do not support taking screenshots");
-                    if (!(driver.GetType().GetMethod("Execute", BindingFlags.Instance | BindingFlags.NonPublic).Invoke((object)driver, new object[2]
-                    {
-                        (object) DriverCommand.Screenshot,
-                        null
-                    }) is Response response2))
-                        throw new WebDriverException("Unexpected failure getting screenshot; response was not in the proper format.");
-                    return new Screenshot(response2.Value.ToString());
-                default:
-                    throw new WebDriverException("Driver does not implement ITakesScreenshot or IHasCapabilities");
+                if (!hasCapabilities.Capabilities.HasCapability(CapabilityType.TakesScreenshot) || !(bool)hasCapabilities.Capabilities.GetCapability(CapabilityType.TakesScreenshot))
+                    throw new WebDriverException("Driver capabilities do not support taking screenshots");
+
+                var executeMethodInfo = hasCapabilities.GetType().GetMethod("Execute", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (!(executeMethodInfo?.Invoke(hasCapabilities, new[] { (object)DriverCommand.Screenshot, null }) is Response response))
+                    throw new WebAutomationException("Unexpected failure getting ScreenShot; response was not in the proper format.");
+
+                return new Screenshot(response.Value.ToString());
             }
+
+            throw new WebDriverException("Driver does not implement ITakesScreenshot or IHasCapabilities");
         }
 
-        public static void ExecuteJavaScript(
-            this IWebDriver driver,
-            string script,
-            params object[] args)
+        public static void ExecuteJavaScript(this IWebDriver driver, string script, params object[] args) => ExecuteJavaScriptInternal(driver, script, args);
+
+        public static T ExecuteJavaScript<T>(this IWebDriver driver, string script, params object[] args)
         {
-            WebDriverExtensions.ExecuteJavaScriptInternal(driver, script, args);
-        }
-        
-        public static T ExecuteJavaScript<T>(
-            this IWebDriver driver,
-            string script,
-            params object[] args)
-        {
-            object o = WebDriverExtensions.ExecuteJavaScriptInternal(driver, script, args);
+            object o = ExecuteJavaScriptInternal(driver, script, args);
             T obj = default(T);
             Type nullableType = typeof(T);
             if (o == null)
             {
-                if (nullableType.IsValueType && Nullable.GetUnderlyingType(nullableType) == (Type)null)
+                if (nullableType.IsValueType && Nullable.GetUnderlyingType(nullableType) == null)
                     throw new WebDriverException("Script returned null, but desired type is a value type");
             }
             else
+            {
                 obj = nullableType.IsInstanceOfType(o) ? (T)o : throw new WebDriverException("Script returned a value, but the result could not be cast to the desired type");
+            }
+
             return obj;
         }
 
-        private static object ExecuteJavaScriptInternal(
-            IWebDriver driver,
-            string script,
-            object[] args)
+        private static object ExecuteJavaScriptInternal(IWebDriver driver, string script, object[] args)
         {
-            if (!(driver is IJavaScriptExecutor javaScriptExecutor))
-                throw new WebDriverException("Driver does not implement IJavaScriptExecutor");
-            return javaScriptExecutor.ExecuteScript(script, args);
+            if (driver is IJavaScriptExecutor javaScriptExecutor)
+                return javaScriptExecutor.ExecuteScript(script, args);
+
+            throw new WebDriverException("Driver does not implement IJavaScriptExecutor");
         }
     }
 }
