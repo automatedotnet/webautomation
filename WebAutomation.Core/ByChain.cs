@@ -8,7 +8,6 @@ namespace WebAutomation.Core
 {
     public class ByChain : IEnumerable<By>
     {
-        // automatically
         public bool AutoFixXPath { get; set; } = true;
 
         public List<By> Chain { get; }
@@ -27,38 +26,23 @@ namespace WebAutomation.Core
             }
         }
 
-        public IEnumerator<By> GetEnumerator()
-        {
-            return Chain.GetEnumerator();
-        }
+        public IEnumerator<By> GetEnumerator() => Chain.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        public ByChain Concat(ByChain chain) => new(Chain.Concat(chain).ToArray());
 
-        public ByChain Concat(ByChain chain)
-        {
-            return new ByChain(Chain.Concat(chain).ToArray());
-        }
-
-        public override string ToString()
-        {
-            return string.Join(", ", this.Select(b => $"'{b}'"));
-        }
+        public override string ToString() => string.Join(", ", this.Select(b => $"'{b}'"));
 
         public static implicit operator By(ByChain chain)
         {
             if (chain.Chain?.Count == 1)
                 return chain.Chain.Single();
+
             // return wrapper around chain if it contains more than 1 link
             return new ByChainBy(chain);
         }
 
-        public static implicit operator ByChain(By by)
-        {
-            return new ByChain(by);
-        }
+        public static implicit operator ByChain(By by) => new(by);
 
         /// <summary>
         /// Wrapper class around ByChain
@@ -80,6 +64,7 @@ namespace WebAutomation.Core
                 {
                     if (Chain == null || Chain.Count != 1)
                         throw new InvalidCastException("By converted from ByChain with more or less than one Link can not be searched!");
+
                     return method(context);
                 };
             }

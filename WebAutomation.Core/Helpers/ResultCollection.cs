@@ -28,5 +28,7 @@ namespace WebAutomation.Core.Helpers
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         public IEnumerator<TProjection> GetEnumerator() => webElementProjections.GetEnumerator();
+
+        public static implicit operator List<TProjection>(ResultCollection<TProjection> resultCollection) => resultCollection.webElementProjections;
     }
 }

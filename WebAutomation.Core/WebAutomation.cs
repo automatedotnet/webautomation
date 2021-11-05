@@ -17,8 +17,10 @@ namespace WebAutomation.Core
         {
             Window = new WindowHelper(this);
             Find = new ElementAccessors(this);
+            Wait = new Waiters(this);
         }
 
+        public Waiters Wait { get; set; }
         public WindowHelper Window { get; set; }
         public ElementAccessors Find { get; set; }
 

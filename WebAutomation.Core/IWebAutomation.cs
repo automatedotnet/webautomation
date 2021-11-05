@@ -21,6 +21,8 @@ namespace WebAutomation.Core
         GenericWaiter GenericWaiter { get; }
 
         bool IsDisposed { get; }
+        IWebAutomationConfiguration Configuration { get; }
+        Waiters Wait { get; set; }
         void Quit();
         event EventHandler Disposed;
     }

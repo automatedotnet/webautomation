@@ -13,22 +13,20 @@ namespace WebAutomation.Core.Helpers
     public class WebElementWaiterInternal
     {
         private readonly IWebAutomation auto;
-        private readonly bool ensureSingleResult;
 
-        public WebElementWaiterInternal(IWebAutomation auto, bool ensureSingleResult = true)
+        public WebElementWaiterInternal(IWebAutomation auto)
         {
             this.auto = auto;
-            this.ensureSingleResult = ensureSingleResult;
         }
 
-        public ResultCollection<IWebElement> ForWebElements(ByChain byChain, Func<IWebElement, bool> matcher, Action<IWebElement> action, int waitSecond = 30, string matcherText = null, string actionText = null)
+        public ResultCollection<IWebElement> ForWebElements(ByChain byChain, Func<IWebElement, bool> matcher = null, Action<IWebElement> action = null, int? waitSecond = null, string matcherText = null, string actionText = null, bool ensureSingleResult = true)
         {
-            return For(byChain, matcher, action, e => e, waitSecond, matcherText, actionText, "WebElement");
+            return For(byChain, matcher, action, e => e, waitSecond, matcherText, actionText, "WebElement", ensureSingleResult);
         }
 
-        public ResultCollection<TProjection> For<TProjection>(ByChain byChain, Func<IWebElement, bool> matcher, Action<IWebElement> action, Func<IWebElement, TProjection> projection, int waitSecond = 30, string matcherText = null, string actionText = null, string projectionText = null)
+        public ResultCollection<TProjection> For<TProjection>(ByChain byChain, Func<IWebElement, bool> matcher = null, Action<IWebElement> action = null, Func<IWebElement, TProjection> projection = null, int? waitSecond = null, string matcherText = null, string actionText = null, string projectionText = null, bool ensureSingleResult = true)
         {
-            int timeout = waitSecond * 1000;
+            int timeout = waitSecond ?? auto.Configuration.DefaultWaitTimeoutSeconds * 1000;
 
             var sw = Stopwatch.StartNew();
 
@@ -36,6 +34,7 @@ namespace WebAutomation.Core.Helpers
             bool matches = false;
             bool actionSuccessful = false;
             bool successfullyProjected = false;
+
             int retry = 1;
 
             ResultCollection<TProjection> projectionResult = null;
@@ -52,7 +51,7 @@ namespace WebAutomation.Core.Helpers
 
                 if (found && matches && actionSuccessful)
                 {
-                    ResultCollection<TProjection> resultCollection = TryProject(webElements, projection, projectionText);
+                    ResultCollection<TProjection> resultCollection = TryProject(webElements, projection, projectionText, ensureSingleResult);
                     successfullyProjected = resultCollection?.Any() != null;
                     projectionResult = resultCollection;
                 }
@@ -174,7 +173,7 @@ namespace WebAutomation.Core.Helpers
             return true;
         }
 
-        private ResultCollection<TProjection> TryProject<TProjection>(List<IWebElement> webElements, Func<IWebElement, TProjection> projection, string projectionText)
+        private ResultCollection<TProjection> TryProject<TProjection>(List<IWebElement> webElements, Func<IWebElement, TProjection> projection, string projectionText, bool ensureSingleResult)
         {
             if (projection == null)
                 throw new WebAutomationException("Projection can not be null!");
