@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WebAutomation.Core.Diagnostic
+namespace WebAutomation.Core
 {
     public static class IWebAutomationContextExtensions
     {

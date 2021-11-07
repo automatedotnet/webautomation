@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenQA.Selenium;
-using WebAutomation.Core.Diagnostic;
+using WebAutomation.Core.Helpers.Common;
 
 namespace WebAutomation.Core.Helpers
 {

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using OpenQA.Selenium;
-using WebAutomation.Core.Exceptions;
 
-namespace WebAutomation.Core
+namespace WebAutomation.Core.Helpers.Common
 {
     public static class WebDriverExtensions
     {
@@ -25,6 +24,14 @@ namespace WebAutomation.Core
             }
 
             throw new WebDriverException("Driver does not implement ITakesScreenshot or IHasCapabilities");
+        }
+
+        public static string SessionId(this IWebDriver driver)
+        {
+            if (driver is IHasSessionId hasSessionId)
+                return hasSessionId.SessionId.ToString();
+
+            throw new WebDriverException("Driver does not implement IHasSessionId");
         }
 
         public static void ExecuteJavaScript(this IWebDriver driver, string script, params object[] args) => ExecuteJavaScriptInternal(driver, script, args);

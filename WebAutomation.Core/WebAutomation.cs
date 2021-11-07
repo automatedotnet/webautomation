@@ -2,6 +2,7 @@
 using System.IO;
 using OpenQA.Selenium;
 using WebAutomation.Core.Helpers;
+using WebAutomation.Core.Helpers.Common;
 
 namespace WebAutomation.Core
 {
@@ -15,27 +16,28 @@ namespace WebAutomation.Core
 
         public WebAutomation(IWebDriverFactory webDriverFactory, IWebAutomationContext context) : this(webDriverFactory, context, new WebAutomationConfiguration())
         {
-            Window = new WindowHelper(this);
             Find = new FindHelper(this);
             Wait = new WaiterHelper(this);
             Do = new ActionHelper(this);
-            Script = new ScriptHelper(this);
-            Browser = new BrowserHelper(this);
             Get = new GetHelper(this);
+            Script = new ScriptHelper(this);
+            Browser = new BrowserInfoHelper(this);
+            Window = new WindowHelper(this);
+            Alert = new AlertHelper(this);
+            Navigate = new NavigationHelper(this);
+            Environment = new EnvironmentHelper(this);
         }
 
+        public FindHelper Find { get; set; }
         public WaiterHelper Wait { get; set; }
-        public BrowserHelper Browser { get; set; }
         public ActionHelper Do { get; set; }
         public GetHelper Get { get; set; }
         public ScriptHelper Script { get; set; }
+        public BrowserInfoHelper Browser { get; set; }
         public WindowHelper Window { get; set; }
-        public FindHelper Find { get; set; }
-
-
-        //IHasSessionId
-
-
+        public AlertHelper Alert { get; set; }
+        public NavigationHelper Navigate { get; set; }
+        public EnvironmentHelper Environment{ get; set; }
 
         public WebAutomation(IWebDriverFactory webDriverFactory, IWebAutomationContext context, IWebAutomationConfiguration configuration)
         {

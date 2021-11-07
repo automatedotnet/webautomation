@@ -5,10 +5,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using OpenQA.Selenium;
-using WebAutomation.Core.Diagnostic;
-using WebAutomation.Core.Exceptions;
 
-namespace WebAutomation.Core.Helpers
+namespace WebAutomation.Core.Helpers.Common
 {
     public class WebElementWaiterInternal
     {
@@ -104,7 +102,7 @@ namespace WebAutomation.Core.Helpers
                     }
 
                     auto.Context.LogError(errorMessage);
-                    throw new WebAutomationTimeOutException(errorMessage);
+                    throw new WebAutomationException(errorMessage);
                 }
             }
             else

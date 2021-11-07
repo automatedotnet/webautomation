@@ -1,7 +1,7 @@
 using System;
 using OpenQA.Selenium;
 
-namespace WebAutomation.Core.Helpers
+namespace WebAutomation.Core.Helpers.Common
 {
     public static class IWebElementExtensions
     {

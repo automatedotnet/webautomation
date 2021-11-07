@@ -1,7 +1,8 @@
 ﻿using System.Linq;
 using OpenQA.Selenium;
+using WebAutomation.Core.Helpers.Common;
 
-namespace WebAutomation.Core
+namespace WebAutomation.Core.Helpers
 {
     public class WindowHelper
     {

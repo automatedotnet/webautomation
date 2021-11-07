@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
-using WebAutomation.Core.Exceptions;
 
-namespace WebAutomation.Core
+namespace WebAutomation.Core.Helpers.Common
 {
     public class GenericWaiter
     {
@@ -37,7 +36,7 @@ namespace WebAutomation.Core
             log(LogLevel.Debug, $"Waiting for [{name ?? func.ToString()}] {(!isSuccessful ? "Not" : "")}Successful in {sw.ElapsedMilliseconds} ms");
 
             if (!isSuccessful)
-                throw new WebAutomationTimeOutException($"Waiting for [{name ?? func.ToString()}] NotSuccessful in {sw.ElapsedMilliseconds} ms");
+                throw new WebAutomationException($"Waiting for [{name ?? func.ToString()}] NotSuccessful in {sw.ElapsedMilliseconds} ms");
         }
     }
 }

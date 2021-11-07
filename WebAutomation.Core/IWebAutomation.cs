@@ -1,6 +1,7 @@
 ﻿using System;
 using OpenQA.Selenium;
 using WebAutomation.Core.Helpers;
+using WebAutomation.Core.Helpers.Common;
 
 namespace WebAutomation.Core
 {
@@ -16,17 +17,20 @@ namespace WebAutomation.Core
         IWebDriverInfo WebDriverInfo { get; }
         
         FindHelper Find { get; }
+        WaiterHelper Wait { get; set; }
+        ActionHelper Do { get; set; }
+        GetHelper Get { get; set; }
+        ScriptHelper Script { get; set; }
+        BrowserInfoHelper Browser { get; set; }
         WindowHelper Window { get; set; }
+        AlertHelper Alert { get; set; }
+        NavigationHelper Navigate { get; set; }
+        EnvironmentHelper Environment { get; set; }
 
         GenericWaiter GenericWaiter { get; }
 
         bool IsDisposed { get; }
         IWebAutomationConfiguration Configuration { get; }
-        WaiterHelper Wait { get; set; }
-        ActionHelper Do { get; set; }
-        ScriptHelper Script { get; set; }
-        GetHelper Get { get; set; }
-        BrowserHelper Browser { get; set; }
         void Quit();
         event EventHandler Disposed;
     }

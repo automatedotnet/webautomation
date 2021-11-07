@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using WebAutomation.Core.Exceptions;
 
-namespace WebAutomation.Core.Helpers
+namespace WebAutomation.Core.Helpers.Common
 {
     public class ResultCollection<TProjection> : IEnumerable<TProjection>
     {

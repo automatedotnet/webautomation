@@ -1,6 +1,6 @@
 using System;
 
-namespace WebAutomation.Core.Exceptions
+namespace WebAutomation.Core.Helpers.Common
 {
     public class WebAutomationException : Exception
     {
