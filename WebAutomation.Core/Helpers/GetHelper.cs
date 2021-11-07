@@ -7,9 +7,29 @@ namespace WebAutomation.Core.Helpers
 {
     public class GetHelper
     {
-        private readonly IWebAutomation auto;
+        private readonly WebElementWaiterInternal webElementWaiterInternal;
 
-        public GetHelper(IWebAutomation auto) => this.auto = auto;
+        public GetHelper(IWebAutomation auto) => webElementWaiterInternal = new WebElementWaiterInternal(auto);
+
+        public TProjection Projection<TProjection>(ByChain byChain, Func<IWebElement, TProjection> projection, int? waitSecond = null, string projectionText = null)
+        {
+            return Projections(byChain, projection, waitSecond, projectionText).Single;
+        }
+
+        public ResultCollection<TProjection> Projections<TProjection>(ByChain byChain, Func<IWebElement, TProjection> projection, int? waitSecond = null, string projectionText = null)
+        {
+            return webElementWaiterInternal.For(byChain, projection: projection, waitSecond: waitSecond, projectionText: projectionText, ensureSingleResult: false);
+        }
+
+        public TProjection ForProjectionWithCondition<TProjection>(ByChain byChain, Func<IWebElement, bool> matcher, Func<IWebElement, TProjection> projection, int? waitSecond = null, string matcherText = null, string projectionText = null)
+        {
+            return ProjectionsWithCondition(byChain, matcher, projection, waitSecond, matcherText, projectionText).Single;
+        }
+
+        public ResultCollection<TProjection> ProjectionsWithCondition<TProjection>(ByChain byChain, Func<IWebElement, bool> matcher, Func<IWebElement, TProjection> projection, int? waitSecond = null, string matcherText = null, string projectionText = null)
+        {
+            return webElementWaiterInternal.For(byChain, matcher, projection: projection, waitSecond: waitSecond, matcherText: matcherText, projectionText: projectionText, ensureSingleResult: false);
+        }
 
         public string Text(ByChain chain, int? waitSecond = null) => Projection(chain, e => string.Equals(e.TagName, "input", StringComparison.InvariantCultureIgnoreCase) ? e.GetAttribute("value") : e.Text, waitSecond, "Text");
         public List<string> Texts(ByChain chain, int? waitSecond = null) => Projections(chain, e => e.Text, waitSecond, "Text");
@@ -21,8 +41,5 @@ namespace WebAutomation.Core.Helpers
         public int VisibleCount(ByChain chain, int? waitSecond = null) => GetIsVisibleList(chain, waitSecond).Count(v => v);
 
         private List<bool> GetIsVisibleList(ByChain chain, int? waitSecond) => Projections(chain, e => e.Displayed, waitSecond, "IsDisplayed");
-        
-        public TProjection Projection<TProjection>(ByChain byChain, Func<IWebElement, TProjection> projection, int? waitSecond = null, string projectionText = null) => auto.Wait.ForProjections(byChain, projection, waitSecond, projectionText).Single;
-        public List<TProjection> Projections<TProjection>(ByChain byChain, Func<IWebElement, TProjection> projection, int? waitSecond = null, string projectionText = null) => auto.Wait.ForProjections(byChain, projection, waitSecond, projectionText);
     }
 }

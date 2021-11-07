@@ -15,14 +15,18 @@ namespace WebAutomation.Core
 
         IWebDriverInfo WebDriverInfo { get; }
         
-        ElementAccessors Find { get; }
+        FindHelper Find { get; }
         WindowHelper Window { get; set; }
 
         GenericWaiter GenericWaiter { get; }
 
         bool IsDisposed { get; }
         IWebAutomationConfiguration Configuration { get; }
-        Waiters Wait { get; set; }
+        WaiterHelper Wait { get; set; }
+        ActionHelper Do { get; set; }
+        ScriptHelper Script { get; set; }
+        GetHelper Get { get; set; }
+        BrowserHelper Browser { get; set; }
         void Quit();
         event EventHandler Disposed;
     }

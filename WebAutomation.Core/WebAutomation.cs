@@ -16,13 +16,21 @@ namespace WebAutomation.Core
         public WebAutomation(IWebDriverFactory webDriverFactory, IWebAutomationContext context) : this(webDriverFactory, context, new WebAutomationConfiguration())
         {
             Window = new WindowHelper(this);
-            Find = new ElementAccessors(this);
-            Wait = new Waiters(this);
+            Find = new FindHelper(this);
+            Wait = new WaiterHelper(this);
+            Do = new ActionHelper(this);
+            Script = new ScriptHelper(this);
+            Browser = new BrowserHelper(this);
+            Get = new GetHelper(this);
         }
 
-        public Waiters Wait { get; set; }
+        public WaiterHelper Wait { get; set; }
+        public BrowserHelper Browser { get; set; }
+        public ActionHelper Do { get; set; }
+        public GetHelper Get { get; set; }
+        public ScriptHelper Script { get; set; }
         public WindowHelper Window { get; set; }
-        public ElementAccessors Find { get; set; }
+        public FindHelper Find { get; set; }
 
 
         //IHasSessionId

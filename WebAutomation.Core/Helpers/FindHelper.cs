@@ -6,11 +6,11 @@ using WebAutomation.Core.Diagnostic;
 
 namespace WebAutomation.Core.Helpers
 {
-    public class ElementAccessors
+    public class FindHelper
     {
         private readonly IWebAutomation auto;
 
-        public ElementAccessors(IWebAutomation auto) => this.auto = auto;
+        public FindHelper(IWebAutomation auto) => this.auto = auto;
 
         public List<IWebElement> Elements(ByChain chain)
         {
