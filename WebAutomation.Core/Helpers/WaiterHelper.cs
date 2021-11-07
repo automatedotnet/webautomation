@@ -13,7 +13,7 @@ namespace WebAutomation.Core.Helpers
 
         public ResultCollection<IWebElement> ForElements(ByChain byChain, int? waitSecond = null)
         {
-            return webElementWaiterInternal.ForWebElements(byChain, waitSecond: waitSecond, ensureSingleResult: false);
+            return webElementWaiterInternal.ForWebElements(byChain, waitSecond: waitSecond);
         }
 
         public IWebElement ForElementWithCondition(ByChain byChain, Func<IWebElement, bool> matcher, int? waitSecond = null, string matcherText = null)
@@ -23,7 +23,7 @@ namespace WebAutomation.Core.Helpers
         
         public ResultCollection<IWebElement> ForElementsWithCondition(ByChain byChain, Func<IWebElement, bool> matcher, int? waitSecond = null, string matcherText = null)
         {
-            return webElementWaiterInternal.ForWebElements(byChain, matcher, waitSecond: waitSecond, matcherText: matcherText, ensureSingleResult: false);
+            return webElementWaiterInternal.ForWebElements(byChain, matcher, waitSecond: waitSecond, matcherText: matcherText);
         }
 
         public IWebElement ForVisible(ByChain chain, int? waitSecond = null) => ForElementWithCondition(chain, e => e.Displayed, waitSecond, "IsDisplayed");

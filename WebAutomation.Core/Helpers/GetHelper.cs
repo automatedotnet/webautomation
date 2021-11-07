@@ -18,7 +18,7 @@ namespace WebAutomation.Core.Helpers
 
         public ResultCollection<TProjection> Projections<TProjection>(ByChain byChain, Func<IWebElement, TProjection> projection, int? waitSecond = null, string projectionText = null)
         {
-            return webElementWaiterInternal.For(byChain, projection: projection, waitSecond: waitSecond, projectionText: projectionText, ensureSingleResult: false);
+            return webElementWaiterInternal.For(byChain, projection: projection, waitSecond: waitSecond, projectionText: projectionText);
         }
 
         public TProjection ForProjectionWithCondition<TProjection>(ByChain byChain, Func<IWebElement, bool> matcher, Func<IWebElement, TProjection> projection, int? waitSecond = null, string matcherText = null, string projectionText = null)
@@ -28,7 +28,7 @@ namespace WebAutomation.Core.Helpers
 
         public ResultCollection<TProjection> ProjectionsWithCondition<TProjection>(ByChain byChain, Func<IWebElement, bool> matcher, Func<IWebElement, TProjection> projection, int? waitSecond = null, string matcherText = null, string projectionText = null)
         {
-            return webElementWaiterInternal.For(byChain, matcher, projection: projection, waitSecond: waitSecond, matcherText: matcherText, projectionText: projectionText, ensureSingleResult: false);
+            return webElementWaiterInternal.For(byChain, matcher, projection: projection, waitSecond: waitSecond, matcherText: matcherText, projectionText: projectionText);
         }
 
         public string Text(ByChain chain, int? waitSecond = null) => Projection(chain, e => string.Equals(e.TagName, "input", StringComparison.InvariantCultureIgnoreCase) ? e.GetAttribute("value") : e.Text, waitSecond, "Text");

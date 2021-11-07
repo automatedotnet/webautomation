@@ -19,12 +19,12 @@ namespace WebAutomation.Core.Helpers
             this.auto = auto;
         }
 
-        public ResultCollection<IWebElement> ForWebElements(ByChain byChain, Func<IWebElement, bool> matcher = null, Action<IWebElement> action = null, int? waitSecond = null, string matcherText = null, string actionText = null, bool ensureSingleResult = true)
+        public ResultCollection<IWebElement> ForWebElements(ByChain byChain, Func<IWebElement, bool> matcher = null, Action<IWebElement> action = null, int? waitSecond = null, string matcherText = null, string actionText = null)
         {
-            return For(byChain, matcher, action, e => e, waitSecond, matcherText, actionText, "WebElement", ensureSingleResult);
+            return For(byChain, matcher, action, e => e, waitSecond, matcherText, actionText, "WebElement");
         }
 
-        public ResultCollection<TProjection> For<TProjection>(ByChain byChain, Func<IWebElement, bool> matcher = null, Action<IWebElement> action = null, Func<IWebElement, TProjection> projection = null, int? waitSecond = null, string matcherText = null, string actionText = null, string projectionText = null, bool ensureSingleResult = true)
+        public ResultCollection<TProjection> For<TProjection>(ByChain byChain, Func<IWebElement, bool> matcher = null, Action<IWebElement> action = null, Func<IWebElement, TProjection> projection = null, int? waitSecond = null, string matcherText = null, string actionText = null, string projectionText = null)
         {
             int timeout = waitSecond ?? auto.Configuration.DefaultWaitTimeoutSeconds * 1000;
 
@@ -51,7 +51,7 @@ namespace WebAutomation.Core.Helpers
 
                 if (found && matches && actionSuccessful)
                 {
-                    ResultCollection<TProjection> resultCollection = TryProject(webElements, projection, projectionText, ensureSingleResult);
+                    ResultCollection<TProjection> resultCollection = TryProject(webElements, projection, projectionText);
                     successfullyProjected = resultCollection?.Any() != null;
                     projectionResult = resultCollection;
                 }
@@ -173,18 +173,14 @@ namespace WebAutomation.Core.Helpers
             return true;
         }
 
-        private ResultCollection<TProjection> TryProject<TProjection>(List<IWebElement> webElements, Func<IWebElement, TProjection> projection, string projectionText, bool ensureSingleResult)
+        private ResultCollection<TProjection> TryProject<TProjection>(List<IWebElement> webElements, Func<IWebElement, TProjection> projection, string projectionText)
         {
             if (projection == null)
                 throw new WebAutomationException("Projection can not be null!");
 
             try
             {
-                var resultCollection = new ResultCollection<TProjection>(webElements.Select(projection).ToList());
-                if (ensureSingleResult)
-                    resultCollection.VerifySingleResultCount();
-
-                return resultCollection;
+                return new ResultCollection<TProjection>(webElements.Select(projection).ToList());
             }
             catch (Exception ex)
             {

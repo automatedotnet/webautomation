@@ -15,15 +15,11 @@ namespace WebAutomation.Core.Helpers
         {
             get
             {
-                VerifySingleResultCount();
+                if (webElementProjections?.Count != 1)
+                    throw new WebAutomationException($"{webElementProjections?.Count} element is found, but 1 was expected!");
+
                 return webElementProjections.Single();
             }
-        }
-
-        public void VerifySingleResultCount()
-        {
-            if (webElementProjections?.Count != 1)
-                throw new WebAutomationException($"{webElementProjections?.Count} element is found, but 1 was expected!");
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

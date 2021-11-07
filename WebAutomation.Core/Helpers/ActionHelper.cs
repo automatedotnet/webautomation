@@ -17,12 +17,12 @@ namespace WebAutomation.Core.Helpers
 
         public void Action(ByChain byChain, Action<IWebElement> action, int? waitSecond = null, string actionText = null)
         {
-            var single = webElementWaiterInternal.ForWebElements(byChain, action: action, waitSecond: waitSecond, actionText: actionText, ensureSingleResult: false).Single;
+            var single = webElementWaiterInternal.ForWebElements(byChain, action: action, waitSecond: waitSecond, actionText: actionText).Single;
         }
         
         public void ActionWithCondition(ByChain byChain, Func<IWebElement, bool> matcher, Action<IWebElement> action, int? waitSecond = null, string matcherText = null, string actionText = null)
         {
-            var single = webElementWaiterInternal.ForWebElements(byChain, matcher, action, waitSecond, matcherText, actionText, false).Single;
+            var single = webElementWaiterInternal.ForWebElements(byChain, matcher, action, waitSecond, matcherText, actionText).Single;
         }
 
         public void Click(ByChain chain, bool forceScrolling = false, bool skipClickabilityCheck = false, int? waitSecond = 30)
